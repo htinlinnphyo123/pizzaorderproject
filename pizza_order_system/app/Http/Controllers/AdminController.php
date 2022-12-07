@@ -91,7 +91,38 @@ class AdminController extends Controller
 
         // direct admin list page
         public function adminListPage(){
-            return view('admin.account.list');
+            $admins = User::when(request('key'),function($query){
+                                $query->orWhere('name','LIKE','%'.request('key').'%')
+                                    ->orWhere('email','LIKE','%'.request('key').'%')
+                                    ->orWhere('gender','LIKE','%'.request('key').'%')
+                                    ->orWhere('phone','LIKE','%'.request('key').'%')
+                                    ->orWhere('address','LIKE','%'.request('key').'%');
+                                })
+                            ->where('role','admin')
+                            ->paginate(3);
+            // dd($admins);
+            $admins->appends(request()->all());
+            return view('admin.account.list',compact(['admins']));
+        }
+
+        //role change direct page
+        public function adminRoleChangePage($id){
+            return view('admin.account.changeRole');
+        }
+
+        //role change function
+        public function adminRoleChange(Request $request){
+            // dd($request->toarray());
+            $id = $request->userId;
+            $data = ['role'=>$request->userRole];
+            User::where('id',$id)->update($data);
+            return redirect()->route('admin#list');
+        }
+
+        // account delete
+        public function adminDelete($id){
+            User::where('id',$id)->delete();
+            return back();
         }
 
         //get user data

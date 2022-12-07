@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\User\UserController;
 
 
 //login register
@@ -45,6 +46,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('edit',[AdminController::class,'edit'])->name('admin#edit');
             Route::post('update/{id}',[AdminController::class,'update'])->name('admin#update');
             Route::get('list',[AdminController::class,'adminListPage'])->name('admin#list');
+            Route::get('role/change/{id}',[AdminController::class,'adminRoleChangePage'])->name('admin#roleChangePage');
+            Route::post('role/change',[AdminController::class,'adminRoleChange'])->name('admin#change');
+            Route::get('delete/{id}',[AdminController::class,'adminDelete'])->name('admin#delete');
         });
 
         //pizza
@@ -61,14 +65,27 @@ Route::middleware(['auth'])->group(function () {
     });
 
 
-
-
     //user
     //home
-    Route::group(['prefix'=>'user/','middleware'=>'user_auth'],function(){
-        Route::get('homepage',function(){
-            return view('user.home');
-        })->name('user#home');
+    Route::group(['prefix'=>'user','middleware'=>'user_auth'],function(){
+        // Route::get('homepage',function(){
+        //     return view('user.home');
+        // })->name('user#home');
+
+        Route::get('/homePage',[UserController::class,'homePage'])->name('user#home');
+
+        //password
+        Route::prefix('password')->group(function(){
+            Route::get('changePasswordPage',[UserController::class,'changePasswordPage'])->name('user#changePasswordPage');
+            Route::post('changePassword',[UserController::class,'changePassword'])->name('user#changePassword');
+        });
+
+        //update profile
+        Route::prefix('profile')->group(function(){
+            Route::get('detail',[UserController::class,'accountDetail'])->name('user#accountDetails');
+        });
+
+
     });
 
 
