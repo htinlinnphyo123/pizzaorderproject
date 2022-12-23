@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
+use App\Models\Rating;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -48,6 +50,8 @@ class ProductController extends Controller
     ///delete pizza
     public function delete($id){
         Product::where('id',$id)->delete();
+        Rating::where('product_id',$id)->delete();
+        Cart::where('product_id',$id)->delete();
         return back()->with(['deleteSuccess'=>'Successfully Delete your product']);
     }
 

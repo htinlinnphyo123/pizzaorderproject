@@ -36,7 +36,6 @@
 
     <!-- Main CSS-->
     <link href="{{ asset('admin/css/theme.css') }}" rel="stylesheet" media="all">
-
 </head>
 
 <body class="animsition">
@@ -58,6 +57,21 @@
                         <li>
                             <a href="{{ route('product#list') }}">
                                 <i class="fa-solid fa-pizza-slice"></i>Product
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin#orderList') }}">
+                                <i class="fa-solid fa-truck"></i>Order List
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin#userListPage') }}">
+                                <i class="fa-solid fa-users-line"></i>User List
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin#contactPage') }}">
+                                <i class="fa-solid fa-envelope-open-text"></i>Contact
                             </a>
                         </li>
                     </ul>
@@ -122,9 +136,13 @@
                                     <div class="account-item clearfix js-item-menu">
                                         <div class="image rounded-circle">
                                             @if (Auth::user()->image!=null)
-                                                <img src="{{ asset('storage/'.Auth::user()->image) }}">
+                                                <img src="{{ asset('storage/'.Auth::user()->image) }}" class="rounded-circle">
                                             @else
-                                                <img src="{{ asset('admin/images/defaultuserimage.png') }}"/>
+                                                @if(Auth::user()->gender=='male')
+                                                    <img src="{{ asset('admin/images/defaultuserimage.png') }}" class="img-thumbnail shadow-sm rounded-circle"/>
+                                                @else
+                                                    <img src="{{ asset('admin/images/defaultuserimagefemale.jpg') }}" class="img-thumbnail shadow-sm rounded-circle"/>
+                                                @endif
                                             @endif
                                         </div>
                                         <div class="content">
@@ -135,9 +153,13 @@
                                                 <div class="image rounded-circle">
                                                     <a href="#">
                                                         @if (Auth::user()->image===null)
-                                                            <img src="{{ asset('admin/images/defaultuserimage.png') }}"/>
+                                                            @if(Auth::user()->gender=='male')
+                                                                <img src="{{ asset('admin/images/defaultuserimage.png') }}" class="img-thumbnail shadow-sm rounded-circle"/>
+                                                            @else
+                                                                <img src="{{ asset('admin/images/defaultuserimagefemale.jpg') }}" class="img-thumbnail shadow-sm rounded-circle"/>
+                                                            @endif
                                                         @else
-                                                            <img src="{{ asset('storage/'.Auth::user()->image) }}">
+                                                            <img src="{{ asset('storage/'.Auth::user()->image) }}" class="rounded-circle">
                                                         @endif
                                                     </a>
                                                 </div>
@@ -216,8 +238,9 @@
 
     <!-- Main JS-->
     <script src="{{ asset('admin/js/main.js') }}"></script>
-
+    {{-- Jquery Js1 --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js" integrity="sha512-tWHlutFnuG0C6nQRlpvrEhE4QpkG1nn2MOUMWmUeRePl4e3Aki0VB6W1v3oLjFtd0hVOtRQ9PHpSfN6u6/QXkQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    @yield('scriptSource')
 </body>
-
 </html>
 <!-- end document-->

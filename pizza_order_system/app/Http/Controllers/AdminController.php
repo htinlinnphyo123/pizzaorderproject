@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Cart;
 use App\Models\User;
+use App\Models\Order;
+use App\Models\Rating;
+use App\Models\Contact;
+use App\Models\OrderList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -107,7 +112,8 @@ class AdminController extends Controller
 
         //role change direct page
         public function adminRoleChangePage($id){
-            return view('admin.account.changeRole');
+            $users = User::where('id',$id)->first();
+            return view('admin.account.changeRole',compact(['users']));
         }
 
         //role change function
@@ -124,6 +130,53 @@ class AdminController extends Controller
             User::where('id',$id)->delete();
             return back();
         }
+
+        //user list page
+        public function userListPage(){
+            $users = User::when(request('key'),function($query){
+                        $query->where('name','LIKE','%'.request('key').'%')
+                                ->orWhere('email','LIKE','%'.request('key').'%')
+                                ->orWhere('phone','LIKE','%'.request('key').'%');
+                        })
+                    ->where('role','user')->paginate(4);
+            return view('admin.useraccount.list',compact(['users']));
+        }
+
+        //user account status change
+        public function useraccStatusChange(Request $request){
+            // logger($request->all());
+
+            User::where('id',$request->userId)->update([
+                'role' => $request->status
+            ]);
+
+            return response()->json([
+                'status' => 'successful',
+                'message' => 'successfully updated user to admin'
+            ],200);
+
+        }
+
+        //user account delete
+        public function userAccountdelete($id){
+            User::where('id',$id)->delete();
+            Rating::where('user_id',$id)->delete();
+            Order::where('user_id',$id)->delete();
+            Cart::where('user_id',$id)->delete();
+            OrderList::where('user_id',$id)->delete();
+            return redirect()->route('admin#userListPage');
+        }
+
+        //contact view direct page
+        public function viewContact(){
+            $contacts = Contact::orderBy('created_at','desc')->paginate(4);
+            // dd($contacts->toarray());
+            return view('admin.contact.list',compact(['contacts']));
+        }
+
+
+
+
 
         //get user data
         private function getUserData($request){

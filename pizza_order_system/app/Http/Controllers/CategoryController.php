@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
+use App\Models\Order;
+use App\Models\Rating;
+use App\Models\Product;
 use App\Models\Category;
+use App\Models\OrderList;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
@@ -45,7 +50,22 @@ class CategoryController extends Controller
         // $getdeleteCategory = Category::where('id',$id)->get()->toarray()[0]['name'];
         $getdeleteCategory = Category::where('id',$id)->first()->name;
         // dd($getdeleteCategory);
+        $productId = Product::where('category_id',$id)->get();
+        // dd($productId->toarray());
+
         Category::where('id',$id)->delete();
+        Product::where('category_id',$id)->delete();
+
+            $array = [];
+            foreach($productId as $id){
+                array_push($array,$id->id);
+            };
+            foreach($array as $arr){
+                logger($arr);
+                Rating::where('product_id',$arr)->delete();
+                Cart::where('product_id',$arr)->delete();
+            };
+
 
         return back()->with(['deleteSuccess' => 'Deleted Successfully','getdeleteCategory'=>$getdeleteCategory]);
     }

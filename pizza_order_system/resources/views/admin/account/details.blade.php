@@ -37,7 +37,11 @@
                                                 @if (Auth::user()->image!==null)
                                                     <img src="{{ asset('storage/'.Auth::user()->image) }}" class="img-thumbnail shadow-sm" style="width:150px;height:200px;object-fit:cover;">
                                                 @else
-                                                    <img src="{{ asset('admin/images/defaultuserimage.png') }}" class="img-thumbnail shadow-sm" style="width:150px;height:200px;object-fit:cover;"/>
+                                                    @if(Auth::user()->gender=='male')
+                                                        <img src="{{ asset('admin/images/defaultuserimage.png') }}" class="img-thumbnail shadow-sm" style="width:150px;height:200px;object-fit:cover;"/>
+                                                    @else
+                                                        <img src="{{ asset('admin/images/defaultuserimagefemale.jpg') }}" class="img-thumbnail shadow-sm" style="width:150px;height:200px;object-fit:cover;"/>
+                                                    @endif
                                                 @endif
                                             </div>
                                             <div class="col-8">

@@ -12,6 +12,7 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="card-title">
+                                            <a href="{{ route('user#home') }}" class="text-decoration-none text-dark"><i class="fa-solid fa-arrow-left me-1"></i> Back to Home Page</a>
                                             <h3 class="text-center">Account Info</h3>
                                         </div>
                                         <hr>
@@ -19,7 +20,7 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                                        <p class="text-success">{{ session('updateSuccess') }}</p>
+                                                        <strong class="text-success"><i class="fa-solid fa-check ms-5 me-2"></i>{{ session('updateSuccess') }}</strong>
                                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
@@ -32,7 +33,11 @@
                                                 @if (Auth::user()->image!==null)
                                                     <img src="{{ asset('storage/'.Auth::user()->image) }}" class="img-thumbnail shadow-sm">
                                                 @else
-                                                    <img src="{{ asset('admin/images/defaultuserimage.png') }}" class="img-thumbnail shadow-sm"/>
+                                                    @if(Auth::user()->gender=='male')
+                                                        <img src="{{ asset('admin/images/defaultuserimage.png') }}" class="img-thumbnail shadow-sm"/>
+                                                    @else
+                                                        <img src="{{ asset('admin/images/defaultuserimagefemale.jpg') }}" class="img-thumbnail shadow-sm"/>
+                                                    @endif
                                                 @endif
                                             </div>
                                             <div class="col-8">
@@ -64,7 +69,7 @@
                                         </div>
                                         <hr>
                                         <div class="d-grid">
-                                            <a href="#" class="w-100 btn btn-secondary py-2"><i class="fa-solid fa-user-pen me-2"></i>Edit Profile</a>
+                                            <a href="{{ route('user#updatePage') }}" class="w-100 btn btn-secondary py-2"><i class="fa-solid fa-user-pen me-2"></i>Edit Profile</a>
                                         </div>
                                     </div>
                                 </div>

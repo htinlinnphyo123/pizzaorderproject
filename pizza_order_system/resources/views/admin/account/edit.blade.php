@@ -26,7 +26,11 @@
                                             <div class="row">
                                                 <div class="col-4 offset-1">
                                                     @if (Auth::user()->image==null)
-                                                        <img src="{{ asset('admin/images/defaultuserimage.png') }}" class="img-thumbnail shadow-sm"/>
+                                                        @if(Auth::user()->gender=='male')
+                                                            <img src="{{ asset('admin/images/defaultuserimage.png') }}" class="img-thumbnail shadow-sm"/>
+                                                        @else
+                                                            <img src="{{ asset('admin/images/defaultuserimagefemale.jpg') }}" class="img-thumbnail shadow-sm"/>
+                                                        @endif
                                                     @else
                                                         <img src="{{ asset('storage/'.Auth::user()->image) }}" class="img-thumbnail shadow-sm">
                                                     @endif

@@ -28,7 +28,7 @@
                 <div class="bg-light p-4 mb-30">
                     <form>
                         <div class="d-flex align-items-center justify-content-around mb-2 rounded-3 bg-warning">
-                            <a class="py-2 m-0 text-dark text-decoration-none" href="#">Total Categories - {{ count($categories) }}</a>
+                            <a class="py-2 m-0 text-dark text-decoration-none" href="{{ route('user#home') }}">Total Categories - {{ count($categories) }}</a>
                         </div>
                         <div class="row">
                             <div class="col-9 ps-5">
@@ -63,12 +63,13 @@
                                 </div>
                             </div>
                         </div>
+                        <input type="hidden" name="" id="category_id" value="{{ $category_id->id }}">
                     </form>
                 </div>
                 <!-- Price End -->
 
                 <div class="">
-                    <a href="{{ route('user#history',Auth::user()->id) }}" class="btn btn btn-warning w-100">Order</a>
+                    <button class="btn btn btn-warning w-100">Order</button>
                 </div>
                 <!-- Size End -->
             </div>
@@ -84,32 +85,24 @@
                                 <button class="btn btn-sm btn-light"><i class="fa fa-th-large"></i></button>
                                 <button class="btn btn-sm btn-light ml-2"><i class="fa fa-bars"></i></button>
                                 <a href="{{ route('user#cartListPage',Auth::user()->id) }}" class="ms-2">
-                                    <button type="button" class="btn btn-sm btn-dark position-relative">
+                                    <button type="button" class="btn btn-sm btn-light position-relative">
                                         <i class="fa-solid fa-cart-shopping"></i>
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                           {{ count($carts) }}
                                         </span>
-                                    </button>
-                                </a>
-                                <a href="{{ route('user#history',Auth::user()->id) }}" class="ms-2">
-                                    <button type="button" class="btn btn-sm btn-dark position-relative">
-                                        <i class="fa-solid fa-clock-rotate-left"></i> History
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                          {{ count($orders) }}
-                                        </span>
-                                    </button>
+                                      </button>
                                 </a>
                             </div>
-                            <div class="ml-2">
+                            <div class="">
                                 @if (session('pwchangeSuccess'))
                                 <div class="alert alert-info alert-dismissible fade show" role="alert">
                                     <strong><i class="fa-solid fa-lock me-1"></i> {{ session('pwchangeSuccess') }}</strong>
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                                 @endif
-                                <div class="btn-group ml-2">
-                                    <select name="sorting" id="sortingOption" class="form-control">
-                                        <option value="">Choose your filter</option>
+                                <div class="btn-group">
+                                    <select name="sorting" id="sortingOption" class="form-select">
+                                        <option value="">Sort by date <i class="fa-solid fa-down"></i></option>
                                         <option value="asc">Ascending</option>
                                         <option value="desc">Desending</option>
                                     </select>
@@ -134,26 +127,12 @@
                                         <div class="d-flex align-items-center justify-content-center mt-2">
                                             <h5>{{ $p->price }} kyats</h5>
                                         </div>
-                                        <div class="">
-                                            @foreach(range(1,5) as $i)
-                                                <span class="fa-stack" style="width:1em">
-                                                    <i class="far fa-star fa-stack-1x text-secondary"></i>
-
-                                                    @foreach ($eachRating as $each)
-                                                        @if($each->rating >0 && $each->name===$p->name)
-                                                            @if($each->rating >0.5)
-                                                                <i class="fas fa-star fa-stack-1x"></i>
-                                                            @else
-                                                                <i class="fas fa-star-half fa-stack-1x"></i>
-                                                            @endif
-                                                        @endif
-                                                        @php
-                                                            if($each->rating >0 && $each->name===$p->name)
-                                                                $each->rating--
-                                                        @endphp
-                                                    @endforeach
-                                                </span>
-                                            @endforeach
+                                        <div class="d-flex align-items-center justify-content-center mb-1">
+                                            <small class="fa fa-star text-warning mr-1"></small>
+                                            <small class="fa fa-star text-warning mr-1"></small>
+                                            <small class="fa fa-star text-warning mr-1"></small>
+                                            <small class="fa fa-star text-warning mr-1"></small>
+                                            <small class="fa fa-star text-warning mr-1"></small>
                                         </div>
                                     </div>
                                 </div>
@@ -166,20 +145,21 @@
         </div>
     </div>
 <!-- Shop End -->
-
-
-
 @endsection
 
 
 @section('script')
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript">
 
         $(document).ready(function(){
 
             $('#sortingOption').change(function(){
                 $eventOption = $('#sortingOption').val();
+                $cateId = $('#category_id').val();
+                console.log($cateId);
+
                 // console.log($eventOption);
                 if($eventOption=='asc'){
                     console.log('hey i am asc');
@@ -187,7 +167,8 @@
                         type : 'get',
                         url : '/user/ajax/pizza/list',
                         data : {
-                            'status' : 'asc'
+                            'status' : 'asc',
+                            'category_id' : $cateId
                         },
                         dataType : 'json',
                         success : function(response){
@@ -237,7 +218,8 @@
                         type : 'get',
                         url : '/user/ajax/pizza/list',
                         data : {
-                            'status' : 'desc'
+                            'status' : 'desc',
+                            'category_id' : $cateId
                         },
                         dataType : 'json',
                         success : function(response){
@@ -289,3 +271,4 @@
     </script>
 
 @endsection
+

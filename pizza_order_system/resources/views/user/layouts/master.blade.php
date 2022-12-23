@@ -9,7 +9,7 @@
     <meta content="Free HTML Templates" name="description">
 
     <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
+    <link href="{{ asset('user/img/favicon.ico') }}" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -26,8 +26,53 @@
     <link href="{{ asset('user/css/style.css') }}" rel="stylesheet">
     <!--Bootstarp CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-</head>
+    {{-- Rating  --}}
+    <style type="text/css">
+        .rating{
+            display:flex;
+            transform:translateX(-180px) rotateY(180deg);
+        }
+        .rating input{
+            display:none;
+        }
+        .rating label{
+            display:block;
+            cursor:pointer;
+            width:50px;
+            position: relative;
+            z-index:10;
+            /* background-color:#ccc; */
+        }
+        .rating label::before{
+            content:'\f005';
+            font-family:fontAwesome;
+            display:block;
+            font-size:25px;
+        }
+        .getrating{
+            display:block;
+            font-size:21px;
+            color:#ffc107;
+            transition:1s;
 
+            position:absolute;
+            top:2px;
+            left:2px;
+            display:none;
+        }
+        /* .rating label:hover ~ .getrating,
+        .rating label:hover ~ .getrating,
+        .rating input:checked ~ .getrating{
+            opacity:1;
+        } */
+        .rating label:hover .getrating,
+        .rating label:hover ~ label .getrating,
+        .rating input:checked ~ label .getrating
+        {
+            display:block;
+        }
+    </style>
+</head>
 <body>
 
     <!-- Navbar Start -->
@@ -43,13 +88,13 @@
                     </button>
                     <div class="collapse navbar-collapse justify-content-between ml-5" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
-                            <a href="shop.html" class="nav-item nav-link active">Home</a>
-                            <a href="cart.html" class="nav-item nav-link">My Cart</a>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            <a href="{{ route('user#home') }}" class="nav-item nav-link active">Home</a>
+                            <a href="{{ route('user#cartListPage',Auth::user()->id) }}" class="nav-item nav-link">My Cart</a>
+                            <a href="{{ route('user#contact') }}" class="nav-item nav-link">Contact</a>
                         </div>
-                        <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
+                        <div class="navbar-nav ml-auto py-0 d-none d-lg-block me-5">
                             <div class="dropdown d-inline">
-                                <a class="btn btn-outline-warning dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa-solid fa-user"></i> {{ Auth::user()->name }} <i class="fa-solid fa-caret-down ms-2"></i>
                                 </a>
                                 <ul class="dropdown-menu mt-2">
@@ -61,7 +106,7 @@
 
                                     <li class="">
                                         <span class="dropdown-item py-3 px-4" href="#">
-                                            <a href="#" class="text-decoration-none text-dark"><i class="fa-solid fa-user-pen me-2"></i>Account Update</a>
+                                            <a href="{{ route('user#updatePage') }}" class="text-decoration-none text-dark"><i class="fa-solid fa-user-pen me-2"></i>Account Update</a>
                                         </span>
                                     </li>
 
@@ -81,14 +126,6 @@
                                     </li>
                                 </ul>
                             </div>
-                            <a href="" class="btn">
-                                <i class="fas fa-heart text-warning"></i>
-                                <span class="badge text-warning border border-warning rounded-circle">0</span>
-                            </a>
-                            <a href="" class="btn me-2">
-                                <i class="fas fa-shopping-cart text-warning"></i>
-                                <span class="badge text-warning border border-warning rounded-circle">0</span>
-                            </a>
                         </div>
                     </div>
                 </nav>
@@ -164,7 +201,7 @@
                 </p>
             </div>
             <div class="col-md-6 px-xl-0 text-center text-md-right">
-                <img class="img-fluid" src="img/payments.png" alt="">
+                <img class="img-fluid" src="{{ asset('user/img/payments.png') }}" alt="">
             </div>
         </div>
     </div>
@@ -181,14 +218,18 @@
     <script src="{{ asset('user/lib/owlcarousel/owl.carousel.min.js') }}"></script>
 
     <!-- Contact Javascript File -->
-    <script src="{{ asset('user/mail/jqBootstrapValidation.min.js') }}"></script>
-    <script src="{{ asset('user/mail/contact.js') }}"></script>
+    {{-- <script src="{{ asset('user/mail/jqBootstrapValidation.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('user/mail/contact.js') }}"></script> --}}
 
     <!-- Template Javascript -->
     <script src="{{ asset('user/js/main.js') }}"></script>
 
     <!-- Bootstrap JavaScript Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    {{-- jquery --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {{-- rating --}}
+    @yield('script')
 
+</body>
 </html>
